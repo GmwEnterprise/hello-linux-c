@@ -3,4 +3,4 @@ project(files C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(files files.c)
+add_executable(files files.c common.c common.h)

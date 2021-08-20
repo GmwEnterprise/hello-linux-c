@@ -1,33 +1,84 @@
 #include "stdio.h"
+#include "common.h"
 
-int main() {
-    char *filepath = "D:\\Projects\\hello-linux-c\\files\\words.txt";
+#define End(method) printf("################################### Method[%s] End\n", method);
 
-    // 如果这里使用相对路径，由于执行文件在cmake-build-debug文件夹里，所以要用 ..\\words.txt 才能访问
-    FILE *fp = fopen(filepath, "rb");
-    int ch;
-    while ((ch = getc(fp)) != -1) {
-        if (ch == '\r' || ch == '\n') {
-            // 打印 \r \n 的ascii码值，结果为 13 10
-            printf(" [%d]\n", ch);
-        } else if (ch < 128) {
+/**
+ * 文本只读模式
+ */
+void mode_r(char *path) {
+    FILE *fp;
+    if ((fp = fopen(path, "r")) != NULL) {
+        int ch;
+        while ((ch = getc(fp)) != EOF) {
             printf("%c", ch);
-        } else {
-            printf("%x", ch);
         }
+        fclose(fp);
     }
-    fclose(fp);
-    return 0;
+    End("mode_r")
 }
 
-/*
-D:\Projects\hello-linux-c\files\cmake-build-debug\files.exe
-hello world! [13]
- [10]
-fxxk [13]
- [10]
-e4bda0e5a5bd [13]
- [10]
-$$$
-Process finished with exit code 0
-*/
+/**
+ * 文本写模式，文件不存在则创建；文件存在则将现有文件长度截为0
+ */
+void mode_w() {
+    FILE *fp = fopen("mode_w.bak", "w");
+    char *input = "Hello world!\nI am Mrag\n";
+    unsigned char ch;
+    int i = 0;
+    while ((ch = *(input + i++)) != 0) {
+        putc(ch, fp);
+        printf("%c", ch);
+    }
+    fclose(fp);
+    End("mode_w")
+}
+
+/**
+ * 文本写模式，往末尾追加内容；不存在则创建文件
+ */
+void mode_a() {
+    FILE *fp = fopen("mode_a.bak", "a");
+    char *add = "add content\n";
+    unsigned char ch;
+    int i = 0;
+    while ((ch = *(add + i++)) != 0) {
+        putc(ch, fp);
+    }
+    fclose(fp);
+    End("mode_a")
+}
+
+/**
+ * a+ 模式，更新模式，可以读整个文件，只能从末尾添加文件内容
+ */
+void mode_aplus(char *path) {
+    FILE *fp = fopen(path, "a+");
+
+    // a+ 模式下直接写入流，内容指针会直接指向末尾
+    putc('A', fp);
+    printPosition(fp);
+
+    // 中间定位函数，内容指针指向内容末尾
+    fseek(fp, 0L, SEEK_END);
+    printPosition(fp);
+
+    // 此时尝试读取EOF
+    printChar(getc(fp));
+    printPosition(fp);
+
+    fclose(fp);
+    End("mode_aplus")
+}
+
+int main(int argc, char **argv) {
+    sizeCheck();
+    End("pre");
+    if (argc > 1) {
+        char *path = *(argv + 1);
+        mode_r(path);
+        mode_aplus(path);
+    }
+    mode_w();
+    mode_a();
+}

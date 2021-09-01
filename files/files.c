@@ -1,7 +1,7 @@
 #include "stdio.h"
 #include "common.h"
 
-#define End(method) printf("################################### Method[%s] End\n", method);
+#define End(method) printf("################################### 函数[%s] End\n", method);
 
 /**
  * 文本只读模式

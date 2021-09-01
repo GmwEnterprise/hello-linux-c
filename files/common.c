@@ -10,11 +10,11 @@ void printPosition(FILE *fp) {
 }
 
 void sizeCheck() {
-    printf("sizeof(char) = %llu\n", sizeof(char));
-    printf("sizeof(short) = %llu\n", sizeof(short));
-    printf("sizeof(int) = %llu\n", sizeof(int));
-    printf("sizeof(long) = %llu\n", sizeof(long));
-    printf("sizeof(long long) = %llu\n", sizeof(long long));
+    printf("sizeof(char) = %lu\n", sizeof(char));
+    printf("sizeof(short) = %lu\n", sizeof(short));
+    printf("sizeof(int) = %lu\n", sizeof(int));
+    printf("sizeof(long) = %lu\n", sizeof(long));
+    printf("sizeof(long long) = %lu\n", sizeof(long long));
 }
 
 void printChar(int ch) {
